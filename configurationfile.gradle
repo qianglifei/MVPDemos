@@ -1,0 +1,15 @@
+ext{
+    //创建了一个名为android的，类型为map的变量，groovy中可以用[]来创建map类型。那么就是一个map下面又创
+    //建了一个map，且名字叫做android。
+    android = [
+        compileSdkVersion: 29,
+        minSdkVersion    : 16,
+        versionCode      : 1,
+        versionName      :"1.0.0"
+    ]
+
+    dependencies = [
+        appcompatV7 : 'com.android.support:appcompat-v7:23.2.1',
+        design      : 'com.android.support:design:23.2.1'
+    ]
+}
