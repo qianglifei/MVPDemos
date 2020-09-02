@@ -4,15 +4,20 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
-import com.bksx.mobile.common.R;
-
 public abstract class BaseActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(attachLayoutId());
+        initEvent();
     }
+
+    /**
+     * 初始化事件
+     * @param
+     */
+    protected abstract void initEvent();
 
     /**
      *

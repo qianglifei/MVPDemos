@@ -9,6 +9,12 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Lifecycle;
+
+import com.bksx.mobile.common.R;
+import com.uber.autodispose.AutoDispose;
+import com.uber.autodispose.AutoDisposeConverter;
+import com.uber.autodispose.android.lifecycle.AndroidLifecycleScopeProvider;
 
 /**
  * @author :qlf
@@ -19,6 +25,12 @@ public abstract class BaseFragment<T extends IBasePresenter> extends Fragment im
 
     @NonNull
     protected Context mContext;
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        mContext = context;
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -53,4 +65,14 @@ public abstract class BaseFragment<T extends IBasePresenter> extends Fragment im
      * @return
      */
     protected abstract int attachLayoutId();
+
+    /**
+     * 绑定生命周期
+     * @param <X>
+     * @return
+     */
+    @Override
+    public <X> AutoDisposeConverter<X> bindAutoDispose() {
+        return AutoDispose.autoDisposable(AndroidLifecycleScopeProvider.from(this, Lifecycle.Event.ON_DESTROY));
+    }
 }
