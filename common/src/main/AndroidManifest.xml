@@ -3,7 +3,8 @@
     package="com.bksx.mobile.common">
 
     <application>
-        <activity android:name=".base.BaseActivity"></activity>
+        <activity android:name=".base.OrdinaryBaseActivity"></activity>
+        <activity android:name=".base.BaseActivity" />
     </application>
 
 </manifest>

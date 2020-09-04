@@ -20,27 +20,39 @@ android {
         }
     }
 
+    sourceSets {
+        main {
+            jni.srcDirs = []
+            jniLibs.srcDirs = ['libs']
+        }
+    }
+}
+
+repositories {
+    flatDir {
+        dirs '../common/libs', 'libs'
+    }
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     implementation 'androidx.appcompat:appcompat:1.2.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.1'
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
     // RxJava 2
-    implementation 'io.reactivex.rxjava2:rxjava:2.1.16'
-    implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
+    api 'io.reactivex.rxjava2:rxjava:2.1.16'
+    api 'io.reactivex.rxjava2:rxandroid:2.0.2'
 
     // AutoDispose
     implementation 'com.uber.autodispose:autodispose:0.7.0'
     implementation 'com.uber.autodispose:autodispose-android:0.7.0'
     implementation 'com.uber.autodispose:autodispose-android-archcomponents:0.7.0'
 
-    // okhttp 3
+//    // okhttp 3
     implementation 'com.squareup.okhttp3:okhttp:3.12.0'
     debugImplementation 'com.squareup.okhttp3:logging-interceptor:3.10.0'
 
@@ -49,5 +61,11 @@ dependencies {
     implementation 'com.scwang.smartrefresh:SmartRefreshHeader:1.0.3'
 
     implementation 'com.google.code.gson:gson:2.8.6'
+
+    implementation(name: 'bksx-android-sdk-soymilk-1.0.9-nogson', ext: 'aar')
+    // ViewModel and LiveData
+    api 'androidx.lifecycle:lifecycle-extensions:2.2.0'
+    // Java8 support for Lifecycles
+    api 'androidx.lifecycle:lifecycle-common-java8:2.2.0'
 
 }
