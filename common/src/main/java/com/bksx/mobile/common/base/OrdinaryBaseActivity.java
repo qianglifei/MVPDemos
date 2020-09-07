@@ -22,28 +22,23 @@ import com.uber.autodispose.android.lifecycle.AndroidLifecycleScopeProvider;
 public abstract class OrdinaryBaseActivity<T extends IBasePresenter>  extends AppCompatActivity implements IBaseView<T> {
     protected T mPresenter;
     @NonNull
-    protected Context mContext;
-
-
-    @Override
-    protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(newBase);
-        mContext = newBase;
-    }
+    protected Context mContext = this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(attachLayoutId());
         fullScreen(this);
+
+        //View 持有Presenter 的引用
+        setPresenter(mPresenter);
         initEvent();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        //View 持有Presenter 的引用
-        setPresenter(mPresenter);
+
     }
 
     /**

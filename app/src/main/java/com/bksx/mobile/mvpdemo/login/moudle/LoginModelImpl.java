@@ -1,12 +1,18 @@
 package com.bksx.mobile.mvpdemo.login.moudle;
 
 import com.bksx.mobile.common.httputils.OkHttpUtils;
+import com.bksx.mobile.mvpdemo.application.BaseApplication;
+import com.bksx.mobile.mvpdemo.config.URLConfig;
 import com.bksx.mobile.mvpdemo.homepage.INewsArticle;
 import com.bksx.mobile.mvpdemo.login.contract.LoginContract;
 
-import java.util.Observable;
+import java.io.IOException;
 
 import io.reactivex.Flowable;
+import io.reactivex.Observable;
+import io.reactivex.Scheduler;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  *
@@ -16,8 +22,11 @@ import io.reactivex.Flowable;
 public class LoginModelImpl implements LoginContract.Model {
 
     @Override
-    public Flowable<String> login(String requestBody, LoginContract.Presenter iPresenter) {
-
-        return OkHttpUtils.getInstance().postJsonSecurity();
+    public Observable<String> login(Object requestBody, LoginContract.Presenter iPresenter) {
+        return OkHttpUtils.
+                getInstance(BaseApplication.getContext()).
+                postJsonSecuritys(BaseApplication.getContext(), URLConfig.BASE_URL + "dlzc/dlzc/grdlCx", requestBody).
+                subscribeOn(Schedulers.io()).
+                observeOn(AndroidSchedulers.mainThread());
     }
 }

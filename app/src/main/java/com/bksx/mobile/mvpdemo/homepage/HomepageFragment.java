@@ -15,7 +15,7 @@ import com.bksx.mobile.mvpdemo.R;
 /**
  * @author :qlf
  */
-public class HomepageFragment extends BaseFragment<INewsArticle.Presenter> implements INewsArticle.View{
+public class HomepageFragment extends BaseFragment<INewsArticle.Presenter> {
 
     public HomepageFragment() {
 
@@ -75,13 +75,4 @@ public class HomepageFragment extends BaseFragment<INewsArticle.Presenter> imple
         }
     }
 
-    @Override
-    public void onLoadData() {
-
-    }
-
-    @Override
-    public void onRefresh() {
-
-    }
 }

@@ -1,10 +1,12 @@
 package com.bksx.mobile.mvpdemo.login.ui;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.bksx.mobile.common.base.OrdinaryBaseActivity;
 import com.bksx.mobile.mvpdemo.R;
 import com.bksx.mobile.mvpdemo.login.contract.LoginContract;
+import com.bksx.mobile.mvpdemo.login.moudle.LoginBean;
 import com.bksx.mobile.mvpdemo.login.presenter.LoginPresenterImpl;
 
 import org.json.JSONObject;
@@ -17,12 +19,10 @@ public class LoginActivity extends OrdinaryBaseActivity<LoginContract.Presenter>
 
     @Override
     protected void initEvent() {
-        HashMap<String,String> hashMap = new HashMap<>();
-        hashMap.put("yhzh","15210603710");
-        hashMap.put("yhmm","a00000");
-        String obj = new JSONObject(hashMap).toString();
-
-        mPresenter.postSendLoginData(mContext,obj);
+        LoginBean bean = new LoginBean();
+        bean.setYhzh("15210603710");
+        bean.setYhmm("a00000");
+        mPresenter.postSendLoginData(mContext,bean);
     }
 
     @Override
@@ -32,7 +32,7 @@ public class LoginActivity extends OrdinaryBaseActivity<LoginContract.Presenter>
 
     @Override
     public void updateUI(String result) {
-
+        Log.i("TAG", "===updateUI: " + result);
     }
 
     @Override
@@ -52,8 +52,10 @@ public class LoginActivity extends OrdinaryBaseActivity<LoginContract.Presenter>
 
     @Override
     public void setPresenter(Presenter presenter) {
-        if (presenter != null){
+        if (presenter == null){
             mPresenter = new LoginPresenterImpl(this);
+        }else {
+            Log.i("TAG", "setPresenter: + Presenter为空");
         }
     }
 

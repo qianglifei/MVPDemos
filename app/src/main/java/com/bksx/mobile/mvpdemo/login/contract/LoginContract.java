@@ -7,6 +7,7 @@ import com.bksx.mobile.common.base.IBasePresenter;
 import com.bksx.mobile.common.base.IBaseView;
 
 import io.reactivex.Flowable;
+import io.reactivex.Observable;
 
 
 /**
@@ -15,11 +16,11 @@ import io.reactivex.Flowable;
 public interface LoginContract {
 
    interface Model extends IBaseModel{
-       Flowable<String> login(String requestBody, Presenter iPresenter);
+       Observable<String> login(Object requestBody, Presenter iPresenter);
    }
 
    interface Presenter extends IBasePresenter{
-       void postSendLoginData(Context context, String sj);
+       void postSendLoginData(Context context, Object sj);
    }
 
    interface View extends IBaseView<Presenter>{

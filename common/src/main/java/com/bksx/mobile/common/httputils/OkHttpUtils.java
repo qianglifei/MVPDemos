@@ -8,6 +8,7 @@ import com.google.gson.Gson;
 
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.reactivestreams.Subscriber;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,6 +21,9 @@ import bksx.com.soymilk.bean.ActionDataBean;
 import bksx.com.soymilk.location.LocationService;
 import bksx.com.soymilk.system.SystemInformation;
 import bksx.com.soymilk.util.ConfigUtil;
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
 import okhttp3.Cache;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -179,11 +183,84 @@ public class OkHttpUtils {
                     String resultType = response.body().string();
                     Log.i("AK认证", resultType);
                     if (resultType.equalsIgnoreCase("true")) {
+
                     }
                 }
 
             }
         });
+    }
+
+    public Observable<String> postJsonSecuritys(Context context, String post_url, Object object) {
+       // this.postJsonAsyn(context, post_url, object, callback);
+        String api_key = ConfigUtil.getMetaDataFromAppication(context, "BEIKONGYUN_API_KEY");
+        String package_name = ApplicationInformation.getPackageName(context);
+        String api_sha1 = ApplicationInformation.getSingInfo(context.getApplicationContext(), package_name, "SHA1");
+        ActionDataBean actionDataBean = this.getActionData(context, post_url);
+        Gson gson = new Gson();
+        String json = gson.toJson(actionDataBean);
+        System.out.println(json);
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHH:mm:ss");
+        Date curDate = new Date(System.currentTimeMillis());
+        String secertData = api_key + api_sha1 + package_name + formatter.format(curDate);
+        String s = new String(Hex.encodeHex(DigestUtils.sha1(secertData)));
+        RequestBody requestBody = FormBody.create(MediaType.parse("application/json; charset=utf-8"), json);
+        final Request request = (new okhttp3.Request.Builder()).
+                addHeader("key", api_key).
+                addHeader("signature", s).
+                addHeader("timestamp", formatter.format(curDate)).
+                url(this.BEIKONGYUN_ACTION_URL).
+                post(requestBody).
+                build();
+        assert request.body() != null;
+        System.out.println(request.body().toString());
+        System.out.println(request.headers().toString());
+        Observable observable = Observable.create(new ObservableOnSubscribe<String>() {
+            @Override
+            public void subscribe(final ObservableEmitter<String> emitter) throws Exception {
+                client.newCall(request).enqueue(new Callback() {
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                        emitter.onError(new Exception("error"));
+                    }
+
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+                        String string = response.body().string();
+                        emitter.onNext(string);          	// ** 1 **
+                        emitter.onComplete();
+                    }
+                });
+            }
+//            @Override
+//            public void call(final Subscriber<? super String> subscriber) {
+//                mOkhttpClient = new OkHttpClient();
+//                RequestBody formBody = new FormBody.Builder()
+//                        .add("accountId", str)
+//                        .build();
+//                Request request = new Request.Builder()
+//                        .url("http://api.yesapi.cn/?s=App.Hello.World")
+//                        .post(formBody)
+//                        .build();
+//                Call call = mOkhttpClient.newCall(request);
+//                call.enqueue(new Callback() {
+//                    @Override
+//                    public void onFailure(Call call, IOException e) {
+//                        subscriber.onError(new Exception("error"));
+//                    }
+//
+//                    @Override
+//                    public void onResponse(Call call, Response response) throws IOException {
+//                        String string = response.body().string();
+//                        subscriber.onNext(string);          	// ** 1 **
+//                        subscriber.onCompleted();
+//
+//                    }
+//                });
+//
+//            }
+        });
+        return observable;
     }
 
     public ActionDataBean getActionData(Context context, String url) {
