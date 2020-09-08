@@ -4,9 +4,11 @@ import android.content.Context;
 import android.util.Log;
 
 import com.bksx.mobile.common.base.OrdinaryBaseActivity;
+import com.bksx.mobile.common.util.MD5Util;
 import com.bksx.mobile.mvpdemo.R;
 import com.bksx.mobile.mvpdemo.login.contract.LoginContract;
 import com.bksx.mobile.mvpdemo.login.moudle.LoginBean;
+import com.bksx.mobile.mvpdemo.login.moudle.LoginBeanTest;
 import com.bksx.mobile.mvpdemo.login.presenter.LoginPresenterImpl;
 
 import org.json.JSONObject;
@@ -20,8 +22,11 @@ public class LoginActivity extends OrdinaryBaseActivity<LoginContract.Presenter>
     @Override
     protected void initEvent() {
         LoginBean bean = new LoginBean();
-        bean.setYhzh("15210603710");
-        bean.setYhmm("a00000");
+        bean.setUsername("zggj");
+        bean.setPassword(MD5Util.md5("0"));
+//        LoginBeanTest bean = new LoginBeanTest();
+//        bean.setYhzh("15210603710");
+//        bean.setYhmm("a00000");
         mPresenter.postSendLoginData(mContext,bean);
     }
 

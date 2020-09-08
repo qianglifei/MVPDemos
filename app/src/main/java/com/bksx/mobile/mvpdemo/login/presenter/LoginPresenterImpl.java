@@ -48,7 +48,8 @@ public class LoginPresenterImpl implements LoginContract.Presenter {
     public void postSendLoginData(Context context, Object qq) {
         Observable<String> login = iLoginModel.login(qq, this);
         //订阅观察者
-        login.as(iLoginView.bindAutoDispose()).
+        login.observeOn(AndroidSchedulers.mainThread()).
+                as(iLoginView.bindAutoDispose()).
          subscribe(new Observer<String>() {
             @Override
             public void onSubscribe(Disposable d) {

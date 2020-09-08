@@ -4,30 +4,22 @@ package com.bksx.mobile.mvpdemo.login.moudle;
  * @author :qlf
  */
 public class LoginBean {
-    private String yhzh;
-    private String yhmm;
+    private String username;
+    private String password;
 
-    public String getYhzh() {
-        return yhzh;
+    public String getUsername() {
+        return username;
     }
 
-    public void setYhzh(String yhzh) {
-        this.yhzh = yhzh;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
-    public String getYhmm() {
-        return yhmm;
+    public String getPassword() {
+        return password;
     }
 
-    public void setYhmm(String yhmm) {
-        this.yhmm = yhmm;
-    }
-
-    @Override
-    public String toString() {
-        return "LoginBean{" +
-                "yhzh='" + yhzh + '\'' +
-                ", yhmm='" + yhmm + '\'' +
-                '}';
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

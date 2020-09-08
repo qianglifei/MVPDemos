@@ -57,8 +57,8 @@ dependencies {
 //    debugImplementation 'com.squareup.okhttp3:logging-interceptor:3.10.0'
 
     //刷新与加载框架
-    implementation 'com.scwang.smartrefresh:SmartRefreshLayout:1.0.3'
-    implementation 'com.scwang.smartrefresh:SmartRefreshHeader:1.0.3'
+    api 'com.scwang.smartrefresh:SmartRefreshLayout:1.0.3'
+    api 'com.scwang.smartrefresh:SmartRefreshHeader:1.0.3'
 
     implementation 'com.google.code.gson:gson:2.8.6'
 
@@ -67,5 +67,8 @@ dependencies {
     api 'androidx.lifecycle:lifecycle-extensions:2.2.0'
     // Java8 support for Lifecycles
     api 'androidx.lifecycle:lifecycle-common-java8:2.2.0'
-
+     //刷新与加载框架
+    api 'com.scwang.smartrefresh:SmartRefreshLayout:1.0.3'
+    api 'com.scwang.smartrefresh:SmartRefreshHeader:1.0.3'
+    implementation 'com.android.support:recyclerview-v7:28.0.0'
 }

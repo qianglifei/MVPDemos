@@ -104,6 +104,48 @@ public class OkHttpUtils {
         });
     }
 
+    public void postJsonAsynchronousRequestRxJavaForBK(Context context, String url, Object object) {
+        //走北控云接口
+        String api_key = ConfigUtil.getMetaDataFromAppication(context, "BEIKONGYUN_API_KEY");
+        String package_name = ApplicationInformation.getPackageName(context);
+        String api_sha1 = ApplicationInformation.getSingInfo(context.getApplicationContext(), package_name, "SHA1");
+        ActionDataBean actionDataBean = this.getActionData(context, url);
+        Gson gson = new Gson();
+        String json = gson.toJson(actionDataBean);
+        System.out.println(json);
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHH:mm:ss");
+        Date curDate = new Date(System.currentTimeMillis());
+        String secertData = api_key + api_sha1 + package_name + formatter.format(curDate);
+        String s = new String(Hex.encodeHex(DigestUtils.sha1(secertData)));
+        RequestBody requestBody = FormBody.create(MediaType.parse("application/json; charset=utf-8"), json);
+        final Request request = (new okhttp3.Request.Builder()).
+                addHeader("key", api_key).
+                addHeader("signature", s).
+                addHeader("timestamp", formatter.format(curDate)).
+                url(this.BEIKONGYUN_ACTION_URL).
+                post(requestBody).
+                build();
+        assert request.body() != null;
+        System.out.println(request.body().toString());
+        System.out.println(request.headers().toString());
+        this.client.newCall(request).enqueue(new Callback() {
+            public void onFailure(Call call, IOException e) {
+
+            }
+
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful() && response != null) {
+                    String resultType = response.body().string();
+                    Log.i("AK认证", resultType);
+                    if (resultType.equalsIgnoreCase("true")) {
+                    }
+                }
+
+            }
+        });
+
+    }
+
     public void postJsonAsyn(Context context, String url, Object object, String header_key, String header_value, final OkHttpUtils.ResultCallback callback) {
         Gson gson = new Gson();
         String json = gson.toJson(object);
@@ -191,30 +233,13 @@ public class OkHttpUtils {
         });
     }
 
-    public Observable<String> postJsonSecuritys(Context context, String post_url, Object object) {
-       // this.postJsonAsyn(context, post_url, object, callback);
-        String api_key = ConfigUtil.getMetaDataFromAppication(context, "BEIKONGYUN_API_KEY");
-        String package_name = ApplicationInformation.getPackageName(context);
-        String api_sha1 = ApplicationInformation.getSingInfo(context.getApplicationContext(), package_name, "SHA1");
-        ActionDataBean actionDataBean = this.getActionData(context, post_url);
+    public Observable<String> postJsonRequest(Context context, String post_url, Object object) {
+        //自身的网络请求
+        postJsonAsynchronousRequestRxJavaForBK(context, post_url, object);
         Gson gson = new Gson();
-        String json = gson.toJson(actionDataBean);
-        System.out.println(json);
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHH:mm:ss");
-        Date curDate = new Date(System.currentTimeMillis());
-        String secertData = api_key + api_sha1 + package_name + formatter.format(curDate);
-        String s = new String(Hex.encodeHex(DigestUtils.sha1(secertData)));
+        String json = gson.toJson(object);
         RequestBody requestBody = FormBody.create(MediaType.parse("application/json; charset=utf-8"), json);
-        final Request request = (new okhttp3.Request.Builder()).
-                addHeader("key", api_key).
-                addHeader("signature", s).
-                addHeader("timestamp", formatter.format(curDate)).
-                url(this.BEIKONGYUN_ACTION_URL).
-                post(requestBody).
-                build();
-        assert request.body() != null;
-        System.out.println(request.body().toString());
-        System.out.println(request.headers().toString());
+        final Request request = (new okhttp3.Request.Builder()).url(post_url).post(requestBody).build();
         Observable observable = Observable.create(new ObservableOnSubscribe<String>() {
             @Override
             public void subscribe(final ObservableEmitter<String> emitter) throws Exception {
@@ -232,33 +257,6 @@ public class OkHttpUtils {
                     }
                 });
             }
-//            @Override
-//            public void call(final Subscriber<? super String> subscriber) {
-//                mOkhttpClient = new OkHttpClient();
-//                RequestBody formBody = new FormBody.Builder()
-//                        .add("accountId", str)
-//                        .build();
-//                Request request = new Request.Builder()
-//                        .url("http://api.yesapi.cn/?s=App.Hello.World")
-//                        .post(formBody)
-//                        .build();
-//                Call call = mOkhttpClient.newCall(request);
-//                call.enqueue(new Callback() {
-//                    @Override
-//                    public void onFailure(Call call, IOException e) {
-//                        subscriber.onError(new Exception("error"));
-//                    }
-//
-//                    @Override
-//                    public void onResponse(Call call, Response response) throws IOException {
-//                        String string = response.body().string();
-//                        subscriber.onNext(string);          	// ** 1 **
-//                        subscriber.onCompleted();
-//
-//                    }
-//                });
-//
-//            }
         });
         return observable;
     }

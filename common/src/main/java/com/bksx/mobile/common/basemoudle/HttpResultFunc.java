@@ -3,9 +3,9 @@ package com.bksx.mobile.common.basemoudle;
 
 
 
-///**
-// * @author :qlf
-// */
+/**
+ * @author :qlf
+ */
 //public class HttpResultFunc<T> implements Func1<BaseResponse<T>, T> {
 //
 //    @Override
