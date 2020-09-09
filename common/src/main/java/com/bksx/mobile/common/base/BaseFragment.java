@@ -72,6 +72,7 @@ public abstract class BaseFragment<T extends IBasePresenter> extends Fragment im
      * 绑定生命周期
      * @param <X>
      * @return
+     *
      */
     @Override
     public <X> AutoDisposeConverter<X> bindAutoDispose() {
