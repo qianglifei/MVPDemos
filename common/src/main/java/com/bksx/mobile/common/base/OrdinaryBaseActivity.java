@@ -14,7 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Lifecycle;
 
-import com.bksx.mobile.common.R;
+import com.bksx.mobile.common.util.AppManager;
 import com.uber.autodispose.AutoDispose;
 import com.uber.autodispose.AutoDisposeConverter;
 import com.uber.autodispose.android.lifecycle.AndroidLifecycleScopeProvider;
@@ -29,16 +29,16 @@ public abstract class OrdinaryBaseActivity<T extends IBasePresenter>  extends Ap
         super.onCreate(savedInstanceState);
         setContentView(attachLayoutId());
         fullScreen(this);
-
-        //View 持有Presenter 的引用
-        setPresenter(mPresenter);
-        initEvent();
+        //Activity放入Application的堆栈中管理
+        AppManager.getAMInstance().addActivity(this);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-
+       //View 持有Presenter 的引用
+        setPresenter(mPresenter);
+        initEvent();
     }
 
     /**
@@ -84,5 +84,11 @@ public abstract class OrdinaryBaseActivity<T extends IBasePresenter>  extends Ap
     @Override
     public <X> AutoDisposeConverter<X> bindAutoDispose() {
         return AutoDispose.autoDisposable(AndroidLifecycleScopeProvider.from(this, Lifecycle.Event.ON_DESTROY));
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        AppManager.getAMInstance().finishActivity(this);
     }
 }

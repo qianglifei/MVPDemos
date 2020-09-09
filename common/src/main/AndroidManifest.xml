@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.bksx.mobile.common">
 
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <application>
         <activity android:name=".base.OrdinaryBaseActivity"></activity>
         <activity android:name=".base.BaseActivity" />

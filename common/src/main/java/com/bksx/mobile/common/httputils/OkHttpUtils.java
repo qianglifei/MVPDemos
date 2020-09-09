@@ -143,7 +143,6 @@ public class OkHttpUtils {
 
             }
         });
-
     }
 
     public void postJsonAsyn(Context context, String url, Object object, String header_key, String header_value, final OkHttpUtils.ResultCallback callback) {
@@ -252,7 +251,7 @@ public class OkHttpUtils {
                     @Override
                     public void onResponse(Call call, Response response) throws IOException {
                         String string = response.body().string();
-                        emitter.onNext(string);          	// ** 1 **
+                        emitter.onNext(string);
                         emitter.onComplete();
                     }
                 });

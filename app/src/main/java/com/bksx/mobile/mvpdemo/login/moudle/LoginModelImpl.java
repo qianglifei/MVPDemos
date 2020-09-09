@@ -25,7 +25,7 @@ public class LoginModelImpl implements LoginContract.Model {
     public Observable<String> login(Object requestBody, LoginContract.Presenter iPresenter) {
         return OkHttpUtils.
                 getInstance(BaseApplication.getContext()).
-                postJsonRequest(BaseApplication.getContext(), URLConfig.BASE_URL + "", requestBody).
+                postJsonRequest(BaseApplication.getContext(), URLConfig.BASE_URL + "user/log", requestBody).
                 subscribeOn(Schedulers.io());
     }
 }
