@@ -1,4 +1,4 @@
-package com.bksx.mobile.common.basemoudle;
+package com.bksx.mobile.common.moudle;
 
 import com.google.gson.annotations.SerializedName;
 
