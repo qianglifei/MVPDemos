@@ -6,6 +6,8 @@
     <application>
         <activity android:name=".base.OrdinaryBaseActivity"></activity>
         <activity android:name=".base.BaseActivity" />
+        <activity android:name=".ganor.PermissionsActivity"
+            android:theme="@style/GrantorNoDisplay"/>
     </application>
 
 </manifest>

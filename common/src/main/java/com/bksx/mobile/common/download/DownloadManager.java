@@ -1,15 +1,19 @@
 package com.bksx.mobile.common.download;
 
 import android.annotation.SuppressLint;
+import android.util.Log;
 
 import org.reactivestreams.Subscriber;
 
 import java.io.IOException;
 
 import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
 import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
+import io.reactivex.functions.Predicate;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -44,17 +48,27 @@ public class DownloadManager {
     /**
      * 开始下载
      * @param url   下载请求的接口
-     * @param downloadObserver   用来回掉的接口
+     *
      */
     @SuppressLint("CheckResult")
-    public void download(String url , DownloadObserver downloadObserver){
-        Observable.just(url).
-                //filter()
-                flatMap(new Subscriber<>())
-                .map(this:: getTe)
+    public void download(String url){
+        Observable.just(url)
+                .map(new Function<String, DownloadEntity>() { // 生成 DownloadInfo
+                    @Override
+                    public DownloadEntity apply(String s) {
+                        Log.i("TAG", "===apply: " + s);
+                        return generateDownloadInfo(s);
+                    }
+                })
+                .flatMap(new Function<DownloadEntity, ObservableSource<DownloadEntity>>() {
+                    @Override
+                    public ObservableSource<DownloadEntity> apply(DownloadEntity downloadEntity) throws Exception {
+                        return Observable.create(new DownloadSubscribe(downloadEntity,mClient));
+                    }
+                })
                 .observeOn(AndroidSchedulers.mainThread()) // 主线程回掉
                 .subscribeOn(Schedulers.io())//在子线程执行
-                .subscribe((Consumer<? super Object>) downloadObserver);
+                .subscribe(new DownloadObserver()); //  添加观察者，监听下载进度
     }
 
     /**
